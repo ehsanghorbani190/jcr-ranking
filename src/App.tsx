@@ -1,6 +1,14 @@
 import "./style.css";
 import useJCRData from "./hooks/useJCRData";
-import { Table, Stack, Grid, GridItem, Input, HStack } from "@chakra-ui/react";
+import {
+  Table,
+  Stack,
+  Grid,
+  GridItem,
+  Input,
+  Text,
+  HStack,
+} from "@chakra-ui/react";
 import {
   PaginationItems,
   PaginationNextTrigger,
@@ -10,6 +18,7 @@ import {
 import { Field } from "@/components/ui/field";
 import { useState } from "preact/hooks";
 import { quartilesColors } from "./constants";
+import { Alert } from "@/components/ui/alert";
 
 export default function App() {
   const [page, setPage] = useState<number>(1);
@@ -68,15 +77,22 @@ export default function App() {
           </GridItem>
         </Grid>
       </Stack>
-      {journals.length ?
+      {journals.length ? (
         <>
-          <Table.ScrollArea marginTop={10} marginLeft={5} marginRight={5}>
+          <Table.ScrollArea
+            marginTop={10}
+            marginLeft={5}
+            marginRight={5}
+            h={"xl"}
+            w={"80vw"}>
             <Table.Root stickyHeader interactive>
               <Table.Header>
                 <Table.Row>
                   {keys.map((heading) => (
                     <Table.ColumnHeader key={heading}>
-                      {heading}
+                      {heading !== "eISSN"
+                        ? heading.charAt(0).toUpperCase() + heading.slice(1)
+                        : heading}
                     </Table.ColumnHeader>
                   ))}
                 </Table.Row>
@@ -90,9 +106,9 @@ export default function App() {
                         <Table.Cell
                           key={cell}
                           backgroundColor={
-                            cell === "quartile" ?
-                              quartilesColors[journal[cell].toLowerCase()]
-                            : null
+                            cell === "quartile"
+                              ? quartilesColors[journal[cell].toLowerCase()]
+                              : null
                           }
                           textAlign={cell === "quartile" ? "center" : "left"}>
                           {journal[cell]}
@@ -119,7 +135,15 @@ export default function App() {
             </HStack>
           </PaginationRoot>
         </>
-      : null}
+      ) : (
+        <Alert
+          status="error"
+          title="No journals found!"
+          maxW={"sm"}
+          marginTop={6}>
+          No journals matched your filters in the JCR ranking.
+        </Alert>
+      )}
     </Stack>
   );
 }
