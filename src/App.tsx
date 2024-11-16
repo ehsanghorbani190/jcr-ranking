@@ -1,4 +1,3 @@
-import "./style.css";
 import useJCRData from "./hooks/useJCRData";
 import {
   Table,
