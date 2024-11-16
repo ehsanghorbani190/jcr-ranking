@@ -88,13 +88,19 @@ export default function App() {
             <Table.Root stickyHeader interactive>
               <Table.Header>
                 <Table.Row>
-                  {keys.map((heading) => (
-                    <Table.ColumnHeader key={heading}>
-                      {heading !== "eISSN"
-                        ? heading.charAt(0).toUpperCase() + heading.slice(1)
-                        : heading}
-                    </Table.ColumnHeader>
-                  ))}
+                  {keys
+                    .filter(
+                      (heading) =>
+                        window.innerWidth >= 1700 ||
+                        ["name", "ISSN", "eISSN", "quartile"].includes(heading)
+                    )
+                    .map((heading) => (
+                      <Table.ColumnHeader key={heading}>
+                        {heading !== "eISSN"
+                          ? heading.charAt(0).toUpperCase() + heading.slice(1)
+                          : heading}
+                      </Table.ColumnHeader>
+                    ))}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -102,18 +108,24 @@ export default function App() {
                   .slice((page - 1) * 20, page * 20)
                   .map((journal, index) => (
                     <Table.Row key={`${journal.name}-${index}`}>
-                      {Object.keys(journal).map((cell) => (
-                        <Table.Cell
-                          key={cell}
-                          backgroundColor={
-                            cell === "quartile"
-                              ? quartilesColors[journal[cell].toLowerCase()]
-                              : null
-                          }
-                          textAlign={cell === "quartile" ? "center" : "left"}>
-                          {journal[cell]}
-                        </Table.Cell>
-                      ))}
+                      {Object.keys(journal)
+                        .filter(
+                          (cell) =>
+                            window.innerWidth >= 1700 ||
+                            ["name", "ISSN", "eISSN", "quartile"].includes(cell)
+                        )
+                        .map((cell) => (
+                          <Table.Cell
+                            key={cell}
+                            backgroundColor={
+                              cell === "quartile"
+                                ? quartilesColors[journal[cell].toLowerCase()]
+                                : null
+                            }
+                            textAlign={cell === "quartile" ? "center" : "left"}>
+                            {journal[cell]}
+                          </Table.Cell>
+                        ))}
                     </Table.Row>
                   ))}
               </Table.Body>
